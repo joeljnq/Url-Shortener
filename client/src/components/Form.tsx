@@ -18,7 +18,7 @@ const Form: React.FC<FormProps> = ({onNewUrl}) => {
   useEffect(()=>{
     const sendURL = async (longURL: string) => {
       try {
-        const response = await fetch("http://127.0.0.1:1234/", {
+        const response = await fetch(import.meta.env.VITE_API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

@@ -1,12 +1,12 @@
 import express from 'express';
 import cors from 'cors';
-import { dbconnect } from './config.js';
+import { dbconnect } from './config/db.js';
 import dotenv from 'dotenv';
 import { createShortUrl, reDirectURL } from './controllers/urlController.js';
 dotenv.config();
 const app = express();
 const router = express.Router();
-const desiredPort = process.env.Port ?? 1234;
+const desiredPort = process.env.Port || 1234;
 
 app.disable('x-powered-by');
 app.use(cors());
