@@ -1,5 +1,4 @@
 const API_ENDPOINT = import.meta.env.VITE_API_URL;
-console.log(API_ENDPOINT);
 
 export const sendURL = async (longURL: string): Promise<string | null> => {
   
