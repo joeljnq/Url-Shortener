@@ -1,67 +1,71 @@
-import React, { useEffect, useState } from "react"
-import { useForm, SubmitHandler } from "react-hook-form"
-import Search from "../icons/Search"
+import React, { useEffect, useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { sendURL } from "../services/longURL.js";
+import Search from "../icons/Search";
 
 type Input = {
-  url: string
-}
+  url: string;
+};
 interface FormProps {
-  onNewUrl: (url: string) => void
-  onChangeError: (error: string) => void
+  onNewUrl: (url: string) => void;
+  onChangeError: (error: string) => void;
 }
-const Form: React.FC<FormProps> = ({ onNewUrl, onChangeError }) => {
-  const { register, handleSubmit, reset } = useForm<Input>()
-  const [url, setUrl] = useState<string>("")
-  const onSubmit: SubmitHandler<Input> = (data) => {
-    setUrl(data.url)
-    reset()
-  }
+interface SendURLProps {
+  url: string;
+}
 
-  const validateURL = (url: string) => {
-    try {
-      if (url.includes('localhost')) {
-        return false
-        
-      }
-      new URL(url)     
-      return true
-    } catch {
-      return false
-    }
-  }
+function useSendURL({ url }: SendURLProps) {
+  const [data, setData] = useState<string>("");
+  const [error, setError] = useState<string>("");
+
   useEffect(() => {
     if (url && validateURL(url) === false) {
-      onChangeError("Please enter a valid url")
-      return
+      setError("Invalid URL");
+      return;
     }
-    const sendURL = async (longURL: string) => {
-      try {
-        onChangeError("")
 
-        const response = await fetch(import.meta.env.VITE_API_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ longURL }),
-        })
-
-        if (!response.ok) {
-          if (response.status === 400) {
-            onChangeError("Please enter a valid url")
-          } else {
-            onChangeError("An error occurred, please try again")
-          }
-        }
-        await response.json().then((data: Input) => onNewUrl(data.url))
-      } catch (error) {
-        console.error(error)
-      }
-    }
     if (url) {
-      sendURL(url)
+      sendURL(url).then((data) => {
+        if (data) {
+          setData(data);
+          setError("");
+        } else {
+          setError("Failed to shorten URL");
+        }
+      });
     }
-  }, [url, onNewUrl, onChangeError])
+  }, [url]);
+
+  return { data, error };
+}
+const validateURL = (url: string) => {
+  try {
+    if (url.includes("localhost")) {
+      return false;
+    }
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+};
+const Form: React.FC<FormProps> = ({ onNewUrl, onChangeError }) => {
+  const { register, handleSubmit, reset } = useForm<Input>();
+  const [url, setUrl] = useState<string>("");
+  const { data, error } = useSendURL({ url });
+
+  useEffect(() => {
+    onNewUrl(data);
+  }, [data, onNewUrl]);
+
+  useEffect(() => {
+    onChangeError(error);
+  }, [error, onChangeError]);
+
+  const onSubmit: SubmitHandler<Input> = (data) => {
+    setUrl(data.url);
+    reset();
+  };
 
   return (
     <form
@@ -89,7 +93,7 @@ const Form: React.FC<FormProps> = ({ onNewUrl, onChangeError }) => {
         <span className="sr-only">Search</span>
       </button>
     </form>
-  )
-}
+  );
+};
 
-export default Form
+export default Form;
