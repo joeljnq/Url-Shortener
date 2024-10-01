@@ -17,6 +17,7 @@
     "express": "^4.21.0",
     "mongoose": "^8.6.3",
     "nanoid": "^5.0.7",
+    "serverless-http": "^3.2.0",
     "zod": "3.23.8"
   }
 }
