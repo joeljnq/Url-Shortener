@@ -3,9 +3,10 @@ import cors from 'cors';
 import { dbconnect } from '../../config/db.js';
 import dotenv from 'dotenv';
 import { createShortUrl, reDirectURL } from '../../controllers/urlController.js';
+import ServerlessHttp from 'serverless-http';
 dotenv.config();
 const app = express();
-const serverless = require('serverless-http');
+const serverless = ServerlessHttp;
 const router = express.Router();
 const desiredPort = process.env.Port || 1234;
 
@@ -46,8 +47,8 @@ app.use((req, res)=>{
 })
 
 app.listen(desiredPort, () => {
-    console.log(`Server is running on port ${desiredPort}`);
+    console.log(`Server is running`);
 })
 dbconnect();
 
-module.exports.handler = serverless(app);
+export const handler = serverless(app);
