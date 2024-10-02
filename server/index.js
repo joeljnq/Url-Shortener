@@ -6,10 +6,12 @@ import { createShortUrl, reDirectURL } from './controllers/urlController.js';
 dotenv.config();
 const app = express();
 const router = express.Router();
-const desiredPort = process.env.Port || 1234;
+const desiredPort = process.env.Port || 3000;
 
 app.disable('x-powered-by');
-app.use(cors());
+app.use(cors({
+    origin: 'https://url-shortener-cyan-seven.vercel.app'
+}))
 app.use((req, res, next)=>{
     if(req.method !== 'POST') return next();
     if(req.headers['content-type'] !== 'application/json') return next();
@@ -21,7 +23,6 @@ app.use((req, res, next)=>{
 
     req.on('end', ()=>{
         const data = JSON.parse(body);
-        //mutate the body
         req.body = data;
         next();
     })
@@ -44,7 +45,7 @@ app.use((req, res)=>{
     res.status(404).send('<h1>404: Page not found</h1>');
 })
 
-app.listen(desiredPort, () => {
+app.listen(desiredPort,() => {
     console.log(`Server is running on port ${desiredPort}`);
 })
 dbconnect();
