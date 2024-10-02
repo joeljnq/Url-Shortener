@@ -20,11 +20,11 @@ const Shortener: React.FC<ShortenerProps> = ({ newUrl }) => {
         Label
       </label>
       <input className="w-5/6 bg-gray-400/90 dark:bg-transparent dark:border-2 dark:border-gray-700 rounded-lg p-4" defaultValue={newUrl} disabled></input>
-      <p className="ml-3 flex items-center  w-2/6 py-2 justify-center cursor-pointer  bg-blue-300 rounded-lg border border-blue-300 dark:border-blue-700 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+      <button className="ml-3 flex items-center w-3/12 justify-center cursor-pointer  bg-blue-300 rounded-lg border border-blue-300 dark:border-blue-700 hover:bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
        onClick={handleCopy}>
         {isCopied ? <Check /> : <Copy />}
-         {isCopied ? "Copied" : "Copy Link"}
-      </p>
+         {isCopied ? "Copied" : "Copy"}
+      </button>
     </div>
   );
 };
